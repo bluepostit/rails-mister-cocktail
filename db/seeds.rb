@@ -6,7 +6,23 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Ingredient.create(name: 'lemon')
-Ingredient.create(name: 'ice')
-Ingredient.create(name: 'campari')
-Ingredient.create(name: 'ginger')
+Ingredient.destroy_all
+Dose.destroy_all
+Cocktail.destroy_all
+
+INGREDIENTS = %w[lemon ice campari vodka ginger kahlua].freeze
+
+INGREDIENTS.each do |name|
+  Ingredient.create(name: name)
+end
+
+
+# Black Russian
+black_russian = Cocktail.create(name: "Black Russian")
+dose1 = Dose.create(description: '1 part',
+                    cocktail: black_russian,
+                    ingredient: Ingredient.find_by(name: 'kahlua'))
+
+dose1 = Dose.create(description: '2 parts',
+                    cocktail: black_russian,
+                    ingredient: Ingredient.find_by(name: 'vodka'))
