@@ -6,11 +6,20 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Ingredient.destroy_all
+require 'json'
+require 'open-uri'
+
 Dose.destroy_all
+Ingredient.destroy_all
 Cocktail.destroy_all
 
-INGREDIENTS = %w[lemon ice campari vodka ginger kahlua].freeze
+def load_ingredients
+  url = 'http://www.thecocktaildb.com/api/json/v1/1/list.php?i=list'.freeze
+  json = JSON.parse(open(url).read)
+  json['drinks'].map { |drink| drink['strIngredient1'] }
+end
+
+INGREDIENTS = load_ingredients
 
 INGREDIENTS.each do |name|
   Ingredient.create(name: name)
@@ -21,8 +30,8 @@ end
 black_russian = Cocktail.create(name: "Black Russian")
 dose1 = Dose.create(description: '1 part',
                     cocktail: black_russian,
-                    ingredient: Ingredient.find_by(name: 'kahlua'))
+                    ingredient: Ingredient.find_by(name: 'Kahlua'))
 
 dose1 = Dose.create(description: '2 parts',
                     cocktail: black_russian,
-                    ingredient: Ingredient.find_by(name: 'vodka'))
+                    ingredient: Ingredient.find_by(name: 'Vodka'))
